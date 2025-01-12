@@ -16,11 +16,21 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Define the schema
 const formSchema = z.object({
   invoiceNumber: z.string().min(1, "Invoice number is required"),
-  driverName: z.string().min(1, "Driver name is required"),
+  // driverName: z.string().min(1, "Driver name is required"),
+  driverName: z.string({
+    required_error: "Please select a driver",
+  }),
   vehicle: z
     .object({
       year: z.string().min(1),
@@ -54,7 +64,9 @@ export function TowConsentForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       invoiceNumber: "1",
-      driverName: "Text Driver",
+      location: {
+        startDateTime: new Date(), // Set default to current datetime
+      },
     },
   });
 
@@ -195,7 +207,7 @@ export function TowConsentForm() {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="driverName"
               render={({ field }) => (
@@ -204,6 +216,31 @@ export function TowConsentForm() {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+            <FormField
+              control={form.control}
+              name="driverName"
+              render={({ field }) => (
+                <FormItem>
+                  <Label>Driver Name</Label>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a driver" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="john-doe">John Doe</SelectItem>
+                      <SelectItem value="jane-smith">Jane Smith</SelectItem>
+                      <SelectItem value="mike-johnson">Mike Johnson</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -267,10 +304,10 @@ export function TowConsentForm() {
               />
               <FormField
                 control={form.control}
-                name="vehicle.plate"
+                name="vehicle.vin"
                 render={({ field }) => (
                   <FormItem>
-                    <Label>Plate#:</Label>
+                    <Label>VIN:</Label>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -280,10 +317,10 @@ export function TowConsentForm() {
               />
               <FormField
                 control={form.control}
-                name="vehicle.vin"
+                name="vehicle.plate"
                 render={({ field }) => (
                   <FormItem>
-                    <Label>VIN:</Label>
+                    <Label>Plate#:</Label>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -333,12 +370,14 @@ export function TowConsentForm() {
                         type="datetime-local"
                         {...field}
                         value={
-                          field.value
-                            ? new Date(field.value).toISOString().slice(0, 16)
+                          field.value && !isNaN(field.value.getTime())
+                            ? field.value.toISOString().slice(0, 16)
                             : ""
                         }
                         onChange={(e) =>
-                          field.onChange(new Date(e.target.value))
+                          field.onChange(
+                            e.target.value ? new Date(e.target.value) : null
+                          )
                         }
                       />
                     </FormControl>
