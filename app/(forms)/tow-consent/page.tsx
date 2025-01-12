@@ -1,5 +1,5 @@
-import { TowConsentFormHook } from "@/components/tow-consent/TowConsentFormHook";
+import { TowConsentForm } from "@/components/tow-consent/TowConsentForm";
 
 export default function TowConsentPage() {
-  return <TowConsentFormHook />;
+  return <TowConsentForm />;
 }

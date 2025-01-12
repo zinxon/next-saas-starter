@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { TowConsentForm } from "@/components/tow-consent/TowConsentForm";
-import { TowConsentFormHook } from "@/components/tow-consent/TowConsentFormHook";
 import { ArrowRight, CreditCard, Database } from "lucide-react";
 import { Terminal } from "./terminal";
 
@@ -8,7 +7,7 @@ export default function HomePage() {
   return (
     <main>
       <section>
-        <TowConsentFormHook />
+        <TowConsentForm />
       </section>
       {/* <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
